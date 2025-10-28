@@ -518,7 +518,8 @@ var isFileURI = (filename) => filename.startsWith('file://');
 // include: runtime_exceptions.js
 // end include: runtime_exceptions.js
 var wasmBinaryFile;
-  wasmBinaryFile = 'x2t.wasm';
+  // Use compressed Brotli version which is much smaller (within Cloudflare Workers 25 MiB limit)
+  wasmBinaryFile = 'x2t.wasm.br';
   if (!isDataURI(wasmBinaryFile)) {
     wasmBinaryFile = locateFile(wasmBinaryFile);
   }

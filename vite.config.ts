@@ -1,6 +1,7 @@
 import path, { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
+import fs from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -26,4 +27,21 @@ export default defineConfig({
       },
     },
   },
+  plugins: [
+    {
+      name: 'exclude-large-wasm',
+      closeBundle() {
+        // After build, remove the large uncompressed WASM file
+        const wasmPath = path.resolve(__dirname, 'dist/wasm/x2t/x2t.wasm');
+        try {
+          if (fs.existsSync(wasmPath)) {
+            fs.unlinkSync(wasmPath);
+            console.log('Removed large x2t.wasm file (using compressed version instead)');
+          }
+        } catch (error) {
+          console.warn('Could not remove x2t.wasm:', error);
+        }
+      },
+    },
+  ],
 });
